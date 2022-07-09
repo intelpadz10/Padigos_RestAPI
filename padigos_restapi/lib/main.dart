@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:padigos_restapi/services/notes_service.dart';
 import 'package:padigos_restapi/views/note_list.dart';
+import 'package:get_it/get_it.dart';
 
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => NotesService());
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const NoteList(),
+      home: NoteList(),
     );
   }
 }
