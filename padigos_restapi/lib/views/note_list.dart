@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:padigos_restapi/models/note_for_listing.dart';
+import 'package:padigos_restapi/services/notes_service.dart';
 import 'package:padigos_restapi/views/note_delete.dart';
 import 'package:padigos_restapi/views/note_modify.dart';
 
@@ -12,32 +13,20 @@ class NoteList extends StatefulWidget {
 }
 
 class _NoteListState extends State<NoteList> {
-  final notes = [
-    NoteForListing(
-      noteID: "1",
-      noteTitle: "Note 1",
-      createDateTime: DateTime.now(),
-      lastEditDateTime: DateTime.now(),
-    ),
-    NoteForListing(
-      noteID: "2",
-      noteTitle: "Note 2",
-      createDateTime: DateTime.now(),
-      lastEditDateTime: DateTime.now(),
-    ),
-    NoteForListing(
-      noteID: "3",
-      noteTitle: "Note 3",
-      createDateTime: DateTime.now(),
-      lastEditDateTime: DateTime.now(),
-    ),
-  ];
+  NotesService get service => GetIt.instance<NotesService>();
+
+  List<NoteForListing> notes = [];
 
   String formatDateTime(DateTime dateTime) {
     return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
   }
 
   @override
+  void initState() {
+    notes = service.getNotesList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
