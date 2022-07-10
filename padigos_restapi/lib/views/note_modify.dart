@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:padigos_restapi/models/note_insert.dart';
 import 'package:padigos_restapi/models/single_note.dart';
 import 'package:padigos_restapi/services/notes_service.dart';
 
@@ -26,22 +27,24 @@ class _NoteModifyState extends State<NoteModify> {
 
   @override
   void initState() {
-    setState(() {
-      _isLoading = true;
-    });
-    service.getSingleNote(widget.noteID).then((response) {
-      setState(() {
-        _isLoading = false;
-      });
-      if (response.error) {
-        errorMessage = response.errorMessage;
-      }
-      note = response.data!;
-      _titleController.text = note.noteTitle;
-      _contentController.text = note.noteContent;
-    });
-
     super.initState();
+
+    if (isEditing) {
+      setState(() {
+        _isLoading = true;
+      });
+      service.getSingleNote(widget.noteID).then((response) {
+        setState(() {
+          _isLoading = false;
+        });
+        if (response.error) {
+          errorMessage = response.errorMessage;
+        }
+        note = response.data!;
+        _titleController.text = note.noteTitle;
+        _contentController.text = note.noteContent;
+      });
+    }
   }
 
   @override
@@ -71,13 +74,45 @@ class _NoteModifyState extends State<NoteModify> {
               child: ElevatedButton(
                   child:
                       const Text('Save', style: TextStyle(color: Colors.white)),
-                  onPressed: () {
+                  onPressed: () async {
                     if (isEditing) {
                       //update note in api
                     } else {
-                      //create note in api
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      final note = InsertNote(
+                        noteTitle: _titleController.text,
+                        noteContent: _contentController.text,
+                      );
+                      final result = await service.createNote(note);
+
+                      setState(() {
+                        _isLoading = false;
+                      });
+                      final title = 'Done';
+                      final text =
+                          result.error ? (result.errorMessage) : 'note created';
+
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(title),
+                          content: Text(text),
+                          actions: <Widget>[
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Ok')),
+                          ],
+                        ),
+                      ).then((data) {
+                        if (result.data!) {
+                          Navigator.of(context).pop();
+                        }
+                      });
                     }
-                    Navigator.of(context).pop();
                   }),
             ),
           ],

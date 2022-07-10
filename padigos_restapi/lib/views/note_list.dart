@@ -46,8 +46,12 @@ class _NoteListState extends State<NoteList> {
         appBar: AppBar(title: const Text('Note List')),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const NoteModify()));
+            Navigator.of(context)
+                .push(
+                    MaterialPageRoute(builder: (context) => const NoteModify()))
+                .then((context) {
+              _fetchNotes();
+            });
           },
           child: const Icon(Icons.add),
         ),
