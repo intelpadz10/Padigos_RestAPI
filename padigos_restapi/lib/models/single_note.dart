@@ -1,21 +1,24 @@
-class NoteForListing {
+class SingleNote {
   String noteID;
   String noteTitle;
+  String noteContent;
   DateTime createDateTime;
   DateTime lastEditDateTime;
 
-  NoteForListing(
-      {this.noteID = ' ',
-      this.noteTitle = ' ',
+  SingleNote(
+      {this.noteID = "",
+      this.noteTitle = "",
+      this.noteContent = "",
       DateTime? createDateTime,
       DateTime? lastEditDateTime})
       : createDateTime = createDateTime ?? DateTime.now(),
         lastEditDateTime = lastEditDateTime ?? DateTime.now();
 
-  factory NoteForListing.fromJson(Map<String, dynamic> item) {
-    return NoteForListing(
+  factory SingleNote.fromJson(Map<String, dynamic> item) {
+    return SingleNote(
       noteID: item['noteID'],
       noteTitle: item['noteTitle'],
+      noteContent: item['noteContent'],
       createDateTime: DateTime.parse(item['createDateTime']),
       lastEditDateTime: DateTime.parse(item['createDateTime']),
     );

@@ -65,7 +65,7 @@ class _NoteListState extends State<NoteList> {
                   height: 1, color: Color.fromARGB(255, 174, 170, 155)),
               itemBuilder: (context, index) {
                 return Dismissible(
-                  key: ValueKey(_apiResponse.data[index].noteID),
+                  key: ValueKey(_apiResponse.data![index].noteID),
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) {},
                   confirmDismiss: (direction) async {
@@ -80,19 +80,19 @@ class _NoteListState extends State<NoteList> {
                       child: const Align(
                           child: Icon(Icons.delete, color: Colors.white))),
                   child: ListTile(
-                      title: Text(_apiResponse.data[index].noteTitle,
+                      title: Text(_apiResponse.data![index].noteTitle,
                           style: const TextStyle(
                               color: Color.fromARGB(255, 100, 10, 255))),
                       subtitle: Text(
-                          'Last edited on ${formatDateTime(_apiResponse.data[index].lastEditDateTime)}'),
+                          'Last edited on ${formatDateTime(_apiResponse.data![index].lastEditDateTime)}'),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => NoteModify(
-                                noteID: _apiResponse.data[index].noteID)));
+                                noteID: _apiResponse.data![index].noteID)));
                       }),
                 );
               },
-              itemCount: _apiResponse.data.length,
+              itemCount: _apiResponse.data!.length,
             );
           },
         ));
