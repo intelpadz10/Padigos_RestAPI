@@ -76,6 +76,34 @@ class _NoteListState extends State<NoteList> {
                     final result = await showDialog(
                         context: context,
                         builder: (context) => const NoteDelete());
+
+                    if (result) {
+                      final deleteResult = await service.deleteNote(
+                        (_apiResponse.data![index].noteID),
+                      );
+
+                      var deleteMessage;
+
+                      if (deleteResult.data = true) {
+                        deleteMessage = 'The note was deleted.';
+                      } else {
+                        deleteMessage = deleteResult.errorMessage;
+                      }
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text('Done'),
+                                content: Text(deleteMessage),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Ok')),
+                                ],
+                              ));
+                      return deleteResult.data ?? false;
+                    }
                     return result;
                   },
                   background: Container(
@@ -90,9 +118,13 @@ class _NoteListState extends State<NoteList> {
                       subtitle: Text(
                           'Last edited on ${formatDateTime(_apiResponse.data![index].lastEditDateTime)}'),
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => NoteModify(
-                                noteID: _apiResponse.data![index].noteID)));
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (context) => NoteModify(
+                                    noteID: _apiResponse.data![index].noteID)))
+                            .then((context) {
+                          _fetchNotes();
+                        });
                       }),
                 );
               },

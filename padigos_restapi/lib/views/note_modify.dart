@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:padigos_restapi/models/note_insert.dart';
+import 'package:padigos_restapi/models/note_update.dart';
 import 'package:padigos_restapi/models/single_note.dart';
 import 'package:padigos_restapi/services/notes_service.dart';
 
@@ -72,11 +73,45 @@ class _NoteModifyState extends State<NoteModify> {
               width: double.infinity,
               height: 35,
               child: ElevatedButton(
-                  child:
-                      const Text('Save', style: TextStyle(color: Colors.white)),
+                  child: const Text('Save Note',
+                      style: TextStyle(color: Colors.white)),
                   onPressed: () async {
                     if (isEditing) {
-                      //update note in api
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      final note = UpdateNote(
+                        noteTitle: _titleController.text,
+                        noteContent: _contentController.text,
+                      );
+                      final result =
+                          await service.updateNote(widget.noteID, note);
+
+                      setState(() {
+                        _isLoading = false;
+                      });
+                      const title = 'Done';
+                      final text =
+                          result.error ? (result.errorMessage) : 'note edited';
+
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text(title),
+                          content: Text(text),
+                          actions: <Widget>[
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Ok')),
+                          ],
+                        ),
+                      ).then((data) {
+                        if (result.data!) {
+                          Navigator.of(context).pop();
+                        }
+                      });
                     } else {
                       setState(() {
                         _isLoading = true;
@@ -90,21 +125,21 @@ class _NoteModifyState extends State<NoteModify> {
                       setState(() {
                         _isLoading = false;
                       });
-                      final title = 'Done';
+                      const title = 'Done';
                       final text =
                           result.error ? (result.errorMessage) : 'note created';
 
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text(title),
+                          title: const Text(title),
                           content: Text(text),
                           actions: <Widget>[
                             ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: Text('Ok')),
+                                child: const Text('Ok')),
                           ],
                         ),
                       ).then((data) {

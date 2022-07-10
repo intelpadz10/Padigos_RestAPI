@@ -4,6 +4,7 @@ import 'package:padigos_restapi/models/api_response.dart';
 import 'package:padigos_restapi/models/note_for_listing.dart';
 import 'package:http/http.dart' as http;
 import 'package:padigos_restapi/models/note_insert.dart';
+import 'package:padigos_restapi/models/note_update.dart';
 import 'dart:convert' as convert;
 
 import 'package:padigos_restapi/models/single_note.dart';
@@ -51,10 +52,34 @@ class NotesService {
   Future<APIResponse<bool>> createNote(InsertNote item) async {
     final response = await http.post(Uri.parse(API),
         headers: headers, body: jsonEncode(item.toJson()));
-    final jsonData = convert.jsonDecode(response.body);
+    // final jsonData = convert.jsonDecode(response.body);
     if (response.statusCode == 201) {
-      // SingleNote.fromJson(jsonData);
+      return APIResponse<bool>(
+        data: true,
+      );
+    }
+    return APIResponse<bool>(error: true, errorMessage: 'An error occured.');
+  }
 
+  Future<APIResponse<bool>> updateNote(String noteID, UpdateNote item) async {
+    final response = await http.put(Uri.parse("$API/$noteID"),
+        headers: headers, body: jsonEncode(item.toJson()));
+    // final jsonData = convert.jsonDecode(response.body);
+    if (response.statusCode == 204) {
+      return APIResponse<bool>(
+        data: true,
+      );
+    }
+    return APIResponse<bool>(error: true, errorMessage: 'An error occured.');
+  }
+
+  Future<APIResponse<bool>> deleteNote(String noteID) async {
+    final response = await http.delete(
+      Uri.parse("$API/$noteID"),
+      headers: headers,
+    );
+    // final jsonData = convert.jsonDecode(response.body);
+    if (response.statusCode == 204) {
       return APIResponse<bool>(
         data: true,
       );
