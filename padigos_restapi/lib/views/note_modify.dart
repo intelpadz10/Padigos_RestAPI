@@ -16,6 +16,7 @@ class NoteModify extends StatefulWidget {
 
 class _NoteModifyState extends State<NoteModify> {
   NotesService get service => GetIt.instance<NotesService>();
+  
   bool get isEditing => widget.noteID != " ";
 
   late String errorMessage;

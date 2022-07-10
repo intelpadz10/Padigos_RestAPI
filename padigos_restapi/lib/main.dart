@@ -6,7 +6,6 @@ import 'package:get_it/get_it.dart';
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => NotesService());
 }
-
 void main() {
   setupLocator();
   runApp(const MyApp());

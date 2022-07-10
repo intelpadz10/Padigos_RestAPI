@@ -35,6 +35,7 @@ class _NoteListState extends State<NoteList> {
     });
 
     _apiResponse = await service.getNotesList();
+
     setState(() {
       _isLoading = false;
     });
